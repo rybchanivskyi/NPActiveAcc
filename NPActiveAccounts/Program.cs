@@ -1,4 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -129,23 +129,26 @@ namespace NPActiveAccount
 
                     foreach (Entity account in accounts)
                     {
+                        if (!account.Attributes.Contains("emailaddress1") ||
+                            String.IsNullOrEmpty(account.Attributes["emailaddress1"].ToString()))
+                        {
+                            continue;
+                        }
                         bool hasEmail = false;
                         foreach (Entity contact in contacts)
                         {
-                            try
+                            if (!contact.Attributes.Contains("emailaddress1") ||
+                                String.IsNullOrEmpty(contact.Attributes["emailaddress1"].ToString()))
                             {
-                                if (account.Attributes["accountid"].ToString() ==
-                                    contact.Attributes["accountid"].ToString()
-                                    && account.Attributes["emailaddress1"].ToString() ==
-                                    contact.Attributes["emailaddress1"].ToString())
-                                {
-                                    hasEmail = true;
-                                    break;
-                                }
+                                continue;
                             }
-                            catch (Exception ex)
+                            if (account.Attributes["accountid"].ToString() ==
+                                contact.Attributes["accountid"].ToString()
+                                && account.Attributes["emailaddress1"].ToString() ==
+                                contact.Attributes["emailaddress1"].ToString())
                             {
-                                Console.WriteLine("An error occurred: \n" + ex.Message);
+                                hasEmail = true;
+                                break;
                             }
                         }
                         if (!hasEmail)
