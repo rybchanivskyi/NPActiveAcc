@@ -150,7 +150,7 @@ namespace NPActiveAccount
                         }
                         if (!hasEmail)
                         {
-                            WriteRecord(account["accountid"].ToString(), file);
+                            WriteRecord(account.Attributes["accountid"].ToString(), file);
                         }
                     }
                 }
